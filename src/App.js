@@ -48,15 +48,12 @@ export default function App() {
   );
 }
 
-const Search = props => {
-  const { value, onChange, children } = props;
-  return (
-    <form>
-      {children}
-      <input type="text" value={value} onChange={onChange} />
-    </form>
-  );
-};
+const Search = ({ value, onChange, children }) => (
+  <form>
+    {children}
+    <input type="text" value={value} onChange={onChange} />
+  </form>
+);
 
 const Table = props => {
   const { list, pattern, onDismiss } = props;
