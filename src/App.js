@@ -46,16 +46,16 @@ export default function App() {
   );
 }
 
-function Search(props) {
+const Search = props => {
   const { value, onChange } = props;
   return (
     <form>
       <input type="text" value={value} onChange={onChange} />
     </form>
   );
-}
+};
 
-function Table(props) {
+const Table = props => {
   const { list, pattern, onDismiss } = props;
   return (
     <div>
@@ -76,4 +76,4 @@ function Table(props) {
       ))}
     </div>
   );
-}
+};
