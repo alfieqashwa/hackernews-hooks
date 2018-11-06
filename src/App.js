@@ -71,12 +71,21 @@ const Table = props => {
           <span>{item.num_comments}</span>
           <span>{item.points}</span>
           <span>
-            <button onClick={() => onDismiss(item.objectID)} type="button">
+            <Button onClick={() => onDismiss(item.objectID)} type="button">
               Dismiss
-            </button>
+            </Button>
           </span>
         </div>
       ))}
     </div>
+  );
+};
+
+const Button = props => {
+  const { onClick, className = '', children } = props;
+  return (
+    <button onClick={onClick} className={className} type="button">
+      {children}
+    </button>
   );
 };
