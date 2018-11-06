@@ -20,17 +20,30 @@ const data = [
   }
 ];
 
+function isSearched(searchTerm) {
+  return function(item) {
+    return item.title.toLowerCase().includes(searchTerm.toLowerCase());
+  };
+}
+
 export default function App() {
   const [list, setList] = useState(data);
+  const [searchTerm, setSearchTerm] = useState('');
 
   function onDismiss(id) {
     setList(list.filter(item => item.objectID !== id));
     // setData(updatedList);
   }
+  function onSearchChange(e) {
+    setSearchTerm(e.target.value);
+  }
 
   return (
     <div className="App">
-      {list.map(item => (
+      <form>
+        <input type="text" onChange={onSearchChange} />
+      </form>
+      {list.filter(isSearched(searchTerm)).map(item => (
         <div key={item.objectID}>
           <span>
             <a href={item.url}>{item.title}</a>
