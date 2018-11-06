@@ -32,18 +32,34 @@ export default function App() {
 
   function onDismiss(id) {
     setList(list.filter(item => item.objectID !== id));
-    // setData(updatedList);
   }
+
   function onSearchChange(e) {
     setSearchTerm(e.target.value);
   }
 
   return (
     <div className="App">
-      <form>
-        <input type="text" onChange={onSearchChange} />
-      </form>
-      {list.filter(isSearched(searchTerm)).map(item => (
+      <Search value={searchTerm} onChange={onSearchChange} />
+      <Table list={list} pattern={searchTerm} onDismiss={onDismiss} />
+    </div>
+  );
+}
+
+function Search(props) {
+  const { value, onChange } = props;
+  return (
+    <form>
+      <input type="text" value={value} onChange={onChange} />
+    </form>
+  );
+}
+
+function Table(props) {
+  const { list, pattern, onDismiss } = props;
+  return (
+    <div>
+      {list.filter(isSearched(pattern)).map(item => (
         <div key={item.objectID}>
           <span>
             <a href={item.url}>{item.title}</a>
