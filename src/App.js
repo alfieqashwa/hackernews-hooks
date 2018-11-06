@@ -1,24 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
-const data = [
-  {
-    title: 'React',
-    url: 'https://reactjs.org/',
-    author: 'Jordan Walke',
-    num_comments: 3,
-    points: 4,
-    objectID: 0
-  },
-  {
-    title: 'Redux',
-    url: 'https://redux.js.org/',
-    author: 'Dan Abramov, Andrew Clark',
-    num_comments: 2,
-    points: 5,
-    objectID: 1
-  }
-];
+const DEFAULT_QUERY = 'redux';
+
+const PATH_BASE = 'https://hn.algolia.com/api/v1';
+const PATH_SEARCH = '/search';
+const PARAM_SEARCH = 'query=';
 
 function isSearched(searchTerm) {
   return function(item) {
@@ -27,15 +14,32 @@ function isSearched(searchTerm) {
 }
 
 export default function App() {
-  const [list, setList] = useState(data);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [result, setResult] = useState(null);
+  const [searchTerm, setSearchTerm] = useState(DEFAULT_QUERY);
+
+  // function setSearchTopStories(result) {
+  //   setResult(result);
+  // }
+
+  useEffect(() => {
+    fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}`)
+      .then(response => response.json())
+      .then(result => setResult(result)) // i think function setSearchTopStories(result) is not necessary
+      .catch(error => error);
+  }, []);
 
   function onDismiss(id) {
-    setList(list.filter(item => item.objectID !== id));
+    const updatedHits = result.hits.filter(item => item.objectID !== id);
+    setResult(...result, updatedHits);
+    // setResult((result: { ...result, hits: updatedHits }));
   }
 
   function onSearchChange(e) {
     setSearchTerm(e.target.value);
+  }
+
+  if (!result) {
+    return null;
   }
 
   return (
@@ -45,7 +49,7 @@ export default function App() {
           Search
         </Search>
       </div>
-      <Table list={list} pattern={searchTerm} onDismiss={onDismiss} />
+      <Table list={result.hits} pattern={searchTerm} onDismiss={onDismiss} />
     </div>
   );
 }
