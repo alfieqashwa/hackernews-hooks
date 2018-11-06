@@ -40,16 +40,19 @@ export default function App() {
 
   return (
     <div className="App">
-      <Search value={searchTerm} onChange={onSearchChange} />
+      <Search value={searchTerm} onChange={onSearchChange}>
+        Search
+      </Search>
       <Table list={list} pattern={searchTerm} onDismiss={onDismiss} />
     </div>
   );
 }
 
 const Search = props => {
-  const { value, onChange } = props;
+  const { value, onChange, children } = props;
   return (
     <form>
+      {children}
       <input type="text" value={value} onChange={onChange} />
     </form>
   );
