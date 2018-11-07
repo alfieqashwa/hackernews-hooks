@@ -1,5 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
+
+const DEFAULT_QUERY = 'redux';
+
+const PATH_BASE = 'https://hn.algolia.com/api/v1';
+const PATH_SEARCH = '/search';
+const PARAM_SEARCH = 'query=';
 
 const data = [
   {
@@ -24,8 +30,20 @@ const isSearched = searchTerm => item =>
   item.title.toLowerCase().includes(searchTerm.toLowerCase());
 
 export default function App() {
-  const [searchTerm, setSearchTerm] = useState('');
   const [list, setList] = useState(data);
+  const [result, setResult] = useState(null);
+  const [searchTerm, setSearchTerm] = useState(DEFAULT_QUERY);
+
+  function setSearchTopStories(result) {
+    setResult(result);
+  }
+
+  useEffect(() => {
+    fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}`)
+      .then(response => response.json())
+      .then(result => setSearchTopStories(result))
+      .catch(error => error);
+  }, []);
 
   function onSearchChange(e) {
     setSearchTerm(e.target.value);
@@ -37,6 +55,10 @@ export default function App() {
     setList(updatedList);
   }
 
+  if (!result) {
+    return null;
+  }
+
   return (
     <div className="page">
       <div className="interactions">
@@ -44,7 +66,7 @@ export default function App() {
           Search
         </Search>
       </div>
-      <Table list={list} pattern={searchTerm} onDismiss={onDismiss} />
+      <Table list={result.hits} pattern={searchTerm} onDismiss={onDismiss} />
     </div>
   );
 }
