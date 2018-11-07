@@ -18,11 +18,8 @@ const data = [
     objectID: 1
   }
 ];
-function isSearched(searchTerm) {
-  return function(item) {
-    return item.title.toLowerCase().includes(searchTerm.toLowerCase());
-  };
-}
+const isSearched = searchTerm => item =>
+  item.title.toLowerCase().includes(searchTerm.toLowerCase());
 
 export default function App() {
   const [searchTerm, setSearchTerm] = useState('');
